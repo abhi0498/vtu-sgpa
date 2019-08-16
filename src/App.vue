@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Navbar />
-    <div v-if="click" class="sem m-2">
+    <div v-if="click" class="sem m-2 w-50">
       <form @submit.prevent="change">
         <label for="sem">Select you semester</label>
         <select class="custom-select my-1 mr-sm-2" id="sem" v-model.number="sem">
