@@ -111,6 +111,9 @@ export default {
   },
   methods: {
     marks: function() {
+      this.mainMarks = [];
+      this.electiveMarks = [];
+      this.labMarks = [];
       this.mainMarks.push(this.main1);
       this.mainMarks.push(this.main2);
       this.mainMarks.push(this.main3);
