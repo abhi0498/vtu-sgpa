@@ -1,17 +1,17 @@
 <template>
   <div class="container w-50">
     <form @submit.prevent="marks">
-      <div class="form-group">
-        <label for="main1">Main Subject 1</label>
+      <div v-for="i in subject.main.index" :key="subject.main.key[i]" class="form-group">
+        <label for="main1">Main Subject {{i+1}}</label>
         <input
-          v-model.number="main1"
+          v-model="sub.main[i]"
           type="text"
           class="form-control"
           placeholder="Enter marks,if failed enter 0"
           required
         />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="main2">Main Subject 2</label>
         <input
           type="number"
@@ -40,18 +40,18 @@
           required
           v-model.number="main4"
         />
-      </div>
-      <div class="form-group">
-        <label for="el1">Elective Subject 1</label>
+      </div>-->
+      <div v-for="i in subject.elective.index" :key="subject.elective.key[i]" class="form-group">
+        <label for="el">Elective Subject {{i+1}}</label>
         <input
-          type="number"
+          v-model="sub.elective[i]"
+          type="text"
           class="form-control"
           placeholder="Enter marks,if failed enter 0"
           required
-          v-model.number="el1"
         />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="el2">Elective Subject 2</label>
         <input
           type="number"
@@ -60,19 +60,19 @@
           required
           v-model.number="el2"
         />
-      </div>
+      </div>-->
 
-      <div class="form-group">
-        <label for="ll1">Lab Subject 1</label>
+      <div v-for="i in subject.lab.index" :key="subject.lab.key[i]" class="form-group">
+        <label for="lab">Lab Subject {{i+1}}</label>
         <input
-          type="number"
+          v-model="sub.lab[i]"
+          type="text"
           class="form-control"
           placeholder="Enter marks,if failed enter 0"
           required
-          v-model.number="lm1"
         />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="ll2">Lab Subject 2</label>
         <input
           type="number"
@@ -81,48 +81,38 @@
           required
           v-model.number="lm2"
         />
-      </div>
+      </div>-->
       <center>
         <input type="submit" value="Submit" />
       </center>
     </form>
-    <p v-if="total!=0" class="m-3">Your SGPA : {{total}}</p>
-    <p></p>
+    <p v-if="total[0]!=0" class="m-2">Your SGPA : {{total[0]}}</p>
+    <p v-if="total[1]>0" class="mb-5">Your percentage: {{total[1]}}</p>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Form",
   data() {
     return {
-      main1: null,
-      main2: null,
-      main3: null,
-      main4: null,
-      el1: null,
-      el2: null,
-      lm1: null,
-      lm2: null,
-      mainMarks: [],
-      electiveMarks: [],
-      labMarks: []
+      main: [],
+      elective: [],
+      lab: [],
+      sub: {
+        main: [],
+        elective: [],
+        lab: [],
+        sgpa: null
+      }
     };
   },
   methods: {
     marks: function() {
-      this.mainMarks = [];
-      this.electiveMarks = [];
-      this.labMarks = [];
-      this.mainMarks.push(this.main1);
-      this.mainMarks.push(this.main2);
-      this.mainMarks.push(this.main3);
-      this.mainMarks.push(this.main4);
-      this.electiveMarks.push(this.el1);
-      this.electiveMarks.push(this.el2);
-      this.labMarks.push(this.lm1);
-      this.labMarks.push(this.lm2);
+      console.log(this.subject);
     },
+
     grade: function(g) {
       switch (true) {
         case g < 40:
@@ -145,30 +135,43 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["subject"]),
     total: function() {
-      var mm = this.mainMarks;
-      var em = this.electiveMarks;
-      var lm = this.labMarks;
+      var main = this.sub.main;
+      var ele = this.sub.elective;
+      var lab = this.sub.lab;
       var grades = [];
-      mm.forEach(m => {
+
+      main.forEach(m => {
         grades.push(this.grade(m) * 4);
       });
-      em.forEach(m => {
+      ele.forEach(m => {
         grades.push(this.grade(m) * 3);
       });
-      lm.forEach(m => {
+      lab.forEach(m => {
         grades.push(this.grade(m) * 2);
       });
+      if (this.subject.main.index.length) {
+        var total_main = this.subject.main.index.length * 4;
+        var total_ele = this.subject.elective.index.length * 3;
+        var total_lab = this.subject.lab.index.length * 2;
+        var total_credits = total_main + total_ele + total_lab;
+      }
       var sum = 0;
-      grades.forEach(g => {
-        sum += g;
+
+      grades.forEach(m => {
+        sum += m;
       });
-      var sgpa = sum / 26;
+
+      console.log(sum);
+      var sgpa = sum / total_credits;
+      var per = (sgpa - 0.75) * 10;
       if (String(sgpa).length > 4) {
         sgpa = String(sgpa);
-        return sgpa.slice(0, 4);
+        per = String(per);
+        return [sgpa.slice(0, 4), per.slice(0, 4)];
       } else {
-        return sgpa;
+        return [sgpa, per];
       }
     }
   }
@@ -176,4 +179,11 @@ export default {
 </script>
 
 <style>
+input[type="submit"] {
+  width: 150%;
+  margin-bottom: 20px;
+}
+form {
+  margin-bottom: 100px;
+}
 </style>

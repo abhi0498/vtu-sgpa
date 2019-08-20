@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <Navbar />
-    <div v-if="click" class="sem m-2 w-50">
+    <Sem v-if="getPage=='sem'" />
+    <!-- <div v-if="click" class="sem m-2 w-50">
       <form @submit.prevent="change">
         <label for="sem">Select you semester</label>
         <select class="custom-select my-1 mr-sm-2" id="sem" v-model.number="sem">
@@ -17,20 +18,26 @@
           <button class="m-2" v-if="sem!=null" @click="clicked">Submit</button>
         </center>
       </form>
-    </div>
-    <Form v-if="!click" />
+    </div>-->
+    <Form v-if="getPage=='calc'" />
+    <Footer />
   </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar";
 import Form from "./components/Form";
+import Footer from "./components/Footer";
+import Sem from "./components/Sem";
+import { mapGetters } from "vuex";
 
 export default {
   name: "app",
   components: {
     Navbar,
-    Form
+    Form,
+    Footer,
+    Sem
   },
   data() {
     return {
@@ -43,7 +50,8 @@ export default {
       this.click = false;
       console.log(this.sem);
     }
-  }
+  },
+  computed: mapGetters(["getPage"])
 };
 </script>
 
