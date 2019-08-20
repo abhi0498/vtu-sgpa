@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <form @submit.prevent="change">
+  <div class="d-flex flex-column mb-3">
+    <form @submit.prevent="change" class="form-group mt-5">
       <label for="main">Enter number of main subjects:</label>
-      <input type="text" name id="n_main" v-model.number="sub.main" required />
+      <input class="form-control" type="text" name id="n_main" v-model.number="sub.main" required />
 
       <label for="elective">Enter number of elective subjects:</label>
       <input
+        class="form-control"
         type="text"
         name
         id="n_elective"
@@ -14,7 +15,14 @@
       />
 
       <label for="lab">Enter number of Lab subjects:</label>
-      <input type="text" name="n_lab" id="n_lab" v-model.number="sub.lab" required />
+      <input
+        type="text"
+        class="form-control"
+        name="n_lab"
+        id="n_lab"
+        v-model.number="sub.lab"
+        required
+      />
       <button>Submit</button>
     </form>
   </div>
@@ -37,7 +45,7 @@ export default {
   methods: {
     ...mapActions(["setSub", "setPage"]),
     change: function() {
-      this.setPage('calc')
+      this.setPage("calc");
       var prev = {
         main: this.sub.main,
         ele: this.sub.elective,
@@ -91,17 +99,15 @@ export default {
 </script>
 
 <style>
-form {
+.form-group {
+  width: 50%;
+  align-self: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
-input {
-  width: 50%;
-}
-button {
-  width: 20%;
+
+.form-group button {
+  margin-top: 20px;
   align-self: center;
-  margin-top: 10px;
 }
 </style>
